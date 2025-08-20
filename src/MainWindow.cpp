@@ -841,6 +841,11 @@ LRESULT CALLBACK CMainWindow::WinMsgHandler(HWND hwnd, UINT uMsg, WPARAM wParam,
                             }
                             m_editor.Scintilla().GetLine(line, pLine.get());
                             pLine[curLineSize - eolBytes] = 0;
+                            if ( curLineSize - eolBytes - 1 > 0 && (pLine[curLineSize - eolBytes - 1] == '\r' || pLine[curLineSize - eolBytes - 1] == '\n'))
+                            {
+                                pLine[curLineSize - eolBytes - 1] = 0;
+                                --curLineSize;
+                            }
                             std::string_view sLine(pLine.get(), curLineSize - eolBytes);
                             bool             textSet = false;
                             for (const auto& [sRegex, annotation] : lexerData.annotations)
