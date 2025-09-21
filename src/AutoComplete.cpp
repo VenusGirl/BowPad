@@ -1,6 +1,6 @@
 ﻿// This file is part of BowPad.
 //
-// Copyright (C) 2021-2024 - Stefan Kueng
+// Copyright (C) 2021-2025 - Stefan Kueng
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -701,6 +701,7 @@ void CAutoComplete::HandleAutoComplete(const SCNotification* scn)
     if (scn->ch == '=')
     {
         auto curLine = m_editor->GetCurrentLine();
+        CStringUtils::trim(curLine);
         curLine      = curLine.substr(0, curLine.size() - 1);
         if (!curLine.empty())
         {
