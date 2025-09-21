@@ -1,6 +1,6 @@
 ﻿// This file is part of BowPad.
 //
-// Copyright (C) 2013-2018, 2020-2022, 2024 - Stefan Kueng
+// Copyright (C) 2013-2018, 2020-2022, 2024-2025 - Stefan Kueng
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -63,6 +63,7 @@
 #include "CmdUndo.h"
 #include "CmdVerticalEdge.h"
 #include "CmdWhiteSpace.h"
+#include "CmdWin11Menu.h"
 #include "CmdZoom.h"
 
 #include "DirFileEnum.h"
@@ -252,6 +253,9 @@ void CCommandHandler::Init(void* obj)
         Add<CCmdLaunchCustom>(i, obj);
     }
     Add<CCmdCustomCommands>(obj);
+
+    Add<CCmdRegisterWin11ContextMenu>(obj);
+    Add<CCmdUnRegisterWin11ContextMenu>(obj);
 
     Add<CCmdRandom>(obj);
 

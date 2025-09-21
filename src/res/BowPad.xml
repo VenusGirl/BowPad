@@ -894,6 +894,8 @@ Hold down the Shift key to show EOLs as well." Keytip="WS">
     <Command Name="cmdGroupSaveAllBtn" Id="10018" />
     <Command Name="cmdAutoComplete" Id="10019" />
     <Command Name="cmdNextLexer" Id="10020" />
+    <Command Name="cmdRegisterWin11ContextMenu" Id="10021" LabelTitle="Register Win11 Context Menu" TooltipTitle="Register Win11 Context Menu" TooltipDescription="Registers BowPad in the Windows 11 context menu"/>
+    <Command Name="cmdUnregisterWin11ContextMenu" Id="10022" LabelTitle="Unregister Win11 Context Menu" TooltipTitle="Unregister Win11 Context Menu" TooltipDescription="Unregisters BowPad from the Windows 11 context menu"/>
 
     <!-- dummy command, does nothing. Used to disable hotkeys -->
     <Command Name="cmdNothing" Id="30000" />

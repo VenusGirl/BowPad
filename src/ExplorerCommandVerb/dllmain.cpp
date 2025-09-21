@@ -1,5 +1,5 @@
 ﻿// dllmain.cpp : Defines the entry point for the DLL application.
-#include "pch.h"
+#include "stdafx.h"
 
 #include <comutil.h>
 #include <wrl/module.h>
@@ -12,11 +12,21 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <algorithm>
+#include <cwctype>
+#include <thread>
+#include <Shlwapi.h>
+#include "../../ext/sktoolslib/PackageRegistration.h"
+#include "../../ext/sktoolslib/PathUtils.h"
+#include "../../ext/sktoolslib/StringUtils.h"
+#include "../../ext/sktoolslib/Registry.h"
 
 #pragma comment(lib, "Shell32.lib")
 #pragma comment(lib, "comsupp.lib")
 
 using namespace Microsoft::WRL;
+
+void          EnsureRegistrationOnCurrentUser();
 
 HMODULE       hDll = nullptr;
 
@@ -28,6 +38,8 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     switch (ulReasonForCall)
     {
         case DLL_PROCESS_ATTACH:
+            EnsureRegistrationOnCurrentUser();
+            break;
         case DLL_THREAD_ATTACH:
         case DLL_THREAD_DETACH:
         case DLL_PROCESS_DETACH:
@@ -36,95 +48,71 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     return TRUE;
 }
 
-// These variables are not exposed as any path name handling probably
-// should be a function in here rather than be manipulating strings directly / inline.
-constexpr wchar_t thisOsPathSeparator  = L'\\';
-constexpr wchar_t otherOsPathSeparator = L'/';
-constexpr wchar_t DeviceSeparator      = L':';
-
-// Check if the character given is either type of folder separator.
-// if we want to remove support for "other"separators we can just
-// change this function and force callers to use NormalizeFolderSeparators on
-// filenames first at first point of entry into a program.
-inline bool       IsFolderSeparator(wchar_t c)
+void RegisterForCurrentUserWorker()
 {
-    return (c == thisOsPathSeparator || c == otherOsPathSeparator);
+    if (::GetSystemMetrics(SM_CLEANBOOT) > 0)
+    {
+        return; // we would get an exception HRESULT 0x8007043c (ERROR_NOT_SAFEBOOT_SERVICE).
+    }
+    auto extPath  = CPathUtils::GetModuleDir(hDll);
+    auto msixPath = extPath + L"\\package.msix";
+    try
+    {
+        PackageRegistration registrator(extPath, msixPath, L"2BD6356E-3263-4AA6-A5FC-C48280BE5EDD");
+
+        // check the registry DWORD value HKCU\Software\BowPad\NoWin11ContextMenu and HKLM\Software\BowPad\NoWin11ContextMenu
+        // and if any of those is set to 1, then we remove any existing package and return
+        CRegStdDWORD        noContextMenuHKCU(L"Software\\BowPad\\NoWin11ContextMenu", 0, true, HKEY_CURRENT_USER);
+        CRegStdDWORD        noContextMenuHKLM(L"Software\\BowPad\\NoWin11ContextMenu", 0, true, HKEY_LOCAL_MACHINE);
+        std::wstring        err;
+        if (noContextMenuHKCU || noContextMenuHKLM)
+            err=registrator.UnregisterForCurrentUser();
+        else
+            err=registrator.RegisterForCurrentUser();
+        if (!err.empty())
+            OutputDebugString((L"bowpad: error during registration: " + err + L"\n").c_str());
+        else
+            OutputDebugString(L"bowpad: registration/unregistration completed successfully\n");
+    }
+    catch (const std::exception& ex)
+    {
+        OutputDebugStringA((std::string("bowpad: exception during registration: ") + ex.what() + "\n").c_str());
+    }
+    // Finally we notify the shell that we have made changes, so it reloads the right click menu items.
+    SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
 }
 
-std::wstring GetModulePath(HMODULE hMod /*= nullptr*/)
+void EnsureRegistrationOnCurrentUser()
 {
-    DWORD                      len       = 0;
-    DWORD                      bufferLen = MAX_PATH; // MAX_PATH is not the limit here!
-    std::unique_ptr<wchar_t[]> path;
-    do
-    {
-        bufferLen += MAX_PATH; // MAX_PATH is not the limit here!
-        path = std::make_unique<wchar_t[]>(bufferLen);
-        len  = GetModuleFileName(hMod, path.get(), bufferLen);
-    } while (len == bufferLen);
-    std::wstring sPath = path.get();
-    return sPath;
-}
+    // check if the process name this dll is loaded into is explorer.exe
+    wchar_t pathBuffer[FILENAME_MAX] = {0};
+    GetModuleFileNameW(NULL, pathBuffer, FILENAME_MAX);
+    PathStripPathW(pathBuffer);
 
-std::wstring GetParentDirectory(const std::wstring& path)
-{
-    static std::wstring noParent;
-    size_t              pathLen = path.length();
-    size_t              pos;
-
-    for (pos = pathLen; pos > 0;)
+    std::wstring moduleName(pathBuffer);
+    std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), std::towlower);
+    if (moduleName == L"explorer.exe")
     {
-        --pos;
-        if (IsFolderSeparator(path[pos]))
+        // check if we're running on windows 11
+        PWSTR        pszPath = nullptr;
+        std::wstring sysPath;
+        if (SHGetKnownFolderPath(FOLDERID_System, KF_FLAG_CREATE, nullptr, &pszPath) == S_OK)
         {
-            size_t fileNameLen = pathLen - (pos + 1);
-            // If the path in it's entirety is just a root, i.e. "\", it has no parent.
-            if (pos == 0 && fileNameLen == 0)
-                return noParent;
-            // If the path in it's entirety is server name, i.e. "\\x", it has no parent.
-            if (pos == 1 && IsFolderSeparator(path[0]) && IsFolderSeparator(path[1]) && fileNameLen > 0)
-                return noParent;
-            // If the parent begins with a device and root, i.e. "?:\" then
-            // include both in the parent.
-            if (pos == 2 && path[pos - 1] == DeviceSeparator)
-            {
-                // If the path is just a device i.e. not followed by a filename, it has no parent.
-                if (fileNameLen == 0)
-                    return noParent;
-                ++pos;
-            }
-            // In summary, return everything before the last "\" of a filename unless the
-            // whole path given is:
-            // a server name, a device name, a root directory, or
-            // a device followed by a root directory, in which case return "".
-            std::wstring parent = path.substr(0, pos);
-            return parent;
+            sysPath = pszPath;
+            CoTaskMemFree(pszPath);
+        }
+        auto             explorerVersion = CPathUtils::GetVersionFromFile(sysPath + L"\\shell32.dll");
+        std::vector<int> versions;
+        stringtok(versions, explorerVersion, true, L".");
+        bool isWin11OrLater = versions.size() > 3 && versions[2] >= 22000;
+        if (isWin11OrLater)
+        {
+            // We are being loaded into explorer.exe on windows 11
+            // start a thread to register (or unregister) the win 11 context menu entry for the current user
+            auto registrationThread = std::thread(RegisterForCurrentUserWorker);
+            registrationThread.detach();
         }
     }
-    // The path doesn't have a directory separator, we must be looking at either:
-    // 1. just a name, like "apple"
-    // 2. just a device, like "c:"
-    // 3. a device followed by a name "c:apple"
-
-    // 1. and 2. specifically have no parent,
-    // For 3. the parent is the device including the separator.
-    // We'll return just the separator if that's all there is.
-    // It's an odd corner case but allow it through so the caller
-    // yields an error if it uses it concatenated with another name rather
-    // than something that might work.
-    pos = path.find_first_of(DeviceSeparator);
-    if (pos != std::wstring::npos)
-    {
-        // A device followed by a path. The device is the parent.
-        std::wstring parent = path.substr(0, pos + 1);
-        return parent;
-    }
-    return noParent;
-}
-
-std::wstring GetModuleDir(HMODULE hMod /*= nullptr*/)
-{
-    return GetParentDirectory(GetModulePath(hMod));
 }
 
 class ExplorerCommandBase : public RuntimeClass<RuntimeClassFlags<ClassicCom>, IExplorerCommand, IObjectWithSite>
@@ -281,7 +269,7 @@ public:
 
     IFACEMETHODIMP GetIcon(_In_opt_ IShellItemArray*, _Outptr_result_nullonfailure_ PWSTR* icon) override
     {
-        auto bpPath = GetModuleDir(hDll);
+        auto bpPath = CPathUtils::GetModuleDir(hDll);
         bpPath += L"\\BowPad.exe,-107";
         auto iconPath = wil::make_cotaskmem_string_nothrow(bpPath.c_str());
         RETURN_IF_NULL_ALLOC(iconPath);
@@ -293,7 +281,7 @@ public:
     {
         try
         {
-            auto bpPath = GetModuleDir(hDll);
+            auto bpPath = CPathUtils::GetModuleDir(hDll);
             bpPath += L"\\BowPad.exe";
 
             if (selection)
@@ -356,7 +344,7 @@ public:
                                 }
                             }
                         }
-                        
+
                         if (!execSucceeded)
                         {
                             // just in case the shell execute with explorer failed

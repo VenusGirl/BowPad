@@ -287,6 +287,14 @@ msgstr ""
 msgid "BowPad lexer file"
 msgstr ""
 
+#. Resource IDs: (283)
+msgid "Bowpad entry added to the Windows 11 explorer context menu"
+msgstr ""
+
+#. Resource IDs: (284)
+msgid "Bowpad entry removed from the Windows 11 explorer context menu"
+msgstr ""
+
 #. Resource IDs: (60011, 60067, 60082)
 msgid "C"
 msgstr ""
@@ -1817,6 +1825,14 @@ msgstr ""
 msgid "Regex mode"
 msgstr ""
 
+#. Resource IDs: (60681, 60682)
+msgid "Register Win11 Context Menu"
+msgstr ""
+
+#. Resource IDs: (60683)
+msgid "Registers BowPad in the Windows 11 context menu"
+msgstr ""
+
 #. Resource IDs: (60356)
 msgid "Reload"
 msgstr ""
@@ -2417,6 +2433,14 @@ msgstr ""
 msgid "Unix (LF)"
 msgstr ""
 
+#. Resource IDs: (60684, 60685)
+msgid "Unregister Win11 Context Menu"
+msgstr ""
+
+#. Resource IDs: (60686)
+msgid "Unregisters BowPad from the Windows 11 context menu"
+msgstr ""
+
 #. Resource IDs: (111)
 msgid "Unsaved modifications"
 msgstr ""
@@ -2616,7 +2640,7 @@ msgstr ""
 msgid "indents wrapped sublines"
 msgstr ""
 
-#. Resource IDs: (60681)
+#. Resource IDs: (60687)
 msgid "no plugins loaded"
 msgstr ""
 

@@ -417,6 +417,12 @@
     <ClInclude Include="..\ext\sktoolslib\Utf8ToWideIterator.h">
       <Filter>sktoolslib</Filter>
     </ClInclude>
+    <ClInclude Include="Commands\CmdWin11Menu.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ext\sktoolslib\PackageRegistration.h">
+      <Filter>sktoolslib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -754,6 +760,12 @@
     </ClCompile>
     <ClCompile Include="Commands\CmdTail.cpp">
       <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Commands\CmdWin11Menu.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ext\sktoolslib\PackageRegistration.cpp">
+      <Filter>sktoolslib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
