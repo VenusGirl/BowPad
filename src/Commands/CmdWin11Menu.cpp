@@ -47,11 +47,11 @@ bool CCmdRegisterWin11ContextMenu::Execute()
         CRegStdDWORD noContextMenuHKCU(L"Software\\BowPad\\NoWin11ContextMenu", 0, true, HKEY_CURRENT_USER);
         noContextMenuHKCU.removeValue();
 
-        auto extPath  = CPathUtils::GetModuleDir(nullptr);
-        auto msixPath = extPath + L"\\package.msix";
-        auto future   = std::async([&]() {
+        auto future = std::async([&]() {
             try
             {
+                auto                extPath  = CPathUtils::GetModuleDir(nullptr);
+                auto                msixPath = extPath + L"\\package.msix";
                 PackageRegistration registrator(extPath, msixPath, L"2BD6356E-3263-4AA6-A5FC-C48280BE5EDD");
                 return registrator.RegisterForCurrentUser();
             }
@@ -60,7 +60,7 @@ bool CCmdRegisterWin11ContextMenu::Execute()
                 return CUnicodeUtils::StdGetUnicode(ex.what());
             }
         });
-        auto ret      = future.get();
+        auto ret    = future.get();
 
         if (ret.empty())
         {
@@ -99,19 +99,18 @@ bool CCmdUnRegisterWin11ContextMenu::Execute()
         CRegStdDWORD noContextMenuHKCU(L"Software\\BowPad\\NoWin11ContextMenu", 0, true, HKEY_CURRENT_USER);
         noContextMenuHKCU = 1;
 
-        auto extPath      = CPathUtils::GetModuleDir(nullptr);
-        auto msixPath     = extPath + L"\\package.msix";
-
         auto future       = std::async([&]() {
-                                    try
-                                    {
-                                        PackageRegistration registrator(extPath, msixPath, L"2BD6356E-3263-4AA6-A5FC-C48280BE5EDD");
-                                        return registrator.UnregisterForCurrentUser();
-                                    }
-                                    catch (const std::exception& ex)
-                                    {
-                                        return CUnicodeUtils::StdGetUnicode(ex.what());
-                                    } });
+                try
+                {
+                    auto                extPath  = CPathUtils::GetModuleDir(nullptr);
+                    auto                msixPath = extPath + L"\\package.msix";
+                    PackageRegistration registrator(extPath, msixPath, L"2BD6356E-3263-4AA6-A5FC-C48280BE5EDD");
+                    return registrator.UnregisterForCurrentUser();
+                }
+                catch (const std::exception& ex)
+                {
+                    return CUnicodeUtils::StdGetUnicode(ex.what());
+                } });
         auto ret          = future.get();
 
         if (ret.empty())
