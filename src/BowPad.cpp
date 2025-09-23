@@ -44,18 +44,12 @@ HINSTANCE   g_hRes;
 bool        firstInstance = false;
 IUIImagePtr g_emptyIcon;
 
-static void RegisterWin11ContextMenu()
+static void RegisterWin11ContextMenu(bool doRegister)
 {
     if (::GetSystemMetrics(SM_CLEANBOOT) > 0)
     {
         return;
     }
-
-    CRegStdDWORD registeredContextMenu(L"Software\\BowPad\\Win11ContextMenuRegistered", 0, true, HKEY_CURRENT_USER);
-    CRegStdDWORD noContextMenuHKCU(L"Software\\BowPad\\NoWin11ContextMenu", 0, true, HKEY_CURRENT_USER);
-    CRegStdDWORD noContextMenuHKLM(L"Software\\BowPad\\NoWin11ContextMenu", 0, true, HKEY_LOCAL_MACHINE);
-    if (noContextMenuHKCU || noContextMenuHKLM || registeredContextMenu)
-        return;
 
     // check if we're running on windows 11
     PWSTR        pszPath = nullptr;
@@ -77,10 +71,10 @@ static void RegisterWin11ContextMenu()
                 auto                extPath  = CPathUtils::GetModuleDir(nullptr);
                 auto                msixPath = extPath + L"\\package.msix";
                 PackageRegistration registrator(extPath, msixPath, L"2BD6356E-3263-4AA6-A5FC-C48280BE5EDD");
-                if (registrator.RegisterForCurrentUser().empty())
-                {
-                    registeredContextMenu = 1;
-                }
+                if (doRegister)
+                    registrator.RegisterForCurrentUser();
+                else
+                    registrator.UnregisterForCurrentUser();
             }
             catch (const std::exception&)
             {
@@ -511,6 +505,16 @@ int bpMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPCTSTR lpCmdLine, int 
         RegisterContextMenu(false);
         return 0;
     }
+    if (parser->HasKey(L"registerwin11contextmenu"))
+    {
+        RegisterWin11ContextMenu(true);
+        return 0;
+    }
+    if (parser->HasKey(L"unregisterwin11contextmenu"))
+    {
+        RegisterWin11ContextMenu(false);
+        return 0;
+    }
 
     bool isAdminMode = SysInfo::Instance().IsUACEnabled() && SysInfo::Instance().IsElevated();
     if (parser->HasKey(L"admin") && !isAdminMode)
@@ -684,7 +688,6 @@ int bpMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPCTSTR lpCmdLine, int 
     if (modulePath.find(' ') != std::wstring::npos)
         modulePath = L"\"" + modulePath + L"\"";
     SetRelaunchCommand(*mainWindow.get(), appID, (modulePath + params).c_str(), L"BowPad", sIconPath.c_str());
-    RegisterWin11ContextMenu();
 
     // Main message loop:
     MSG   msg = {nullptr};

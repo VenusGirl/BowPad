@@ -16,7 +16,6 @@
 #include <cwctype>
 #include <thread>
 #include <Shlwapi.h>
-#include "../../ext/sktoolslib/PackageRegistration.h"
 #include "../../ext/sktoolslib/PathUtils.h"
 #include "../../ext/sktoolslib/StringUtils.h"
 #include "../../ext/sktoolslib/Registry.h"
@@ -26,7 +25,6 @@
 
 using namespace Microsoft::WRL;
 
-void          EnsureRegistrationOnCurrentUser();
 
 HMODULE       hDll = nullptr;
 
@@ -38,7 +36,6 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     switch (ulReasonForCall)
     {
         case DLL_PROCESS_ATTACH:
-            EnsureRegistrationOnCurrentUser();
             break;
         case DLL_THREAD_ATTACH:
         case DLL_THREAD_DETACH:
@@ -46,73 +43,6 @@ BOOL APIENTRY DllMain(HMODULE hModule,
             break;
     }
     return TRUE;
-}
-
-void RegisterForCurrentUserWorker()
-{
-    if (::GetSystemMetrics(SM_CLEANBOOT) > 0)
-    {
-        return; // we would get an exception HRESULT 0x8007043c (ERROR_NOT_SAFEBOOT_SERVICE).
-    }
-    auto extPath  = CPathUtils::GetModuleDir(hDll);
-    auto msixPath = extPath + L"\\package.msix";
-    try
-    {
-        PackageRegistration registrator(extPath, msixPath, L"2BD6356E-3263-4AA6-A5FC-C48280BE5EDD");
-
-        // check the registry DWORD value HKCU\Software\BowPad\NoWin11ContextMenu and HKLM\Software\BowPad\NoWin11ContextMenu
-        // and if any of those is set to 1, then we remove any existing package and return
-        CRegStdDWORD        noContextMenuHKCU(L"Software\\BowPad\\NoWin11ContextMenu", 0, true, HKEY_CURRENT_USER);
-        CRegStdDWORD        noContextMenuHKLM(L"Software\\BowPad\\NoWin11ContextMenu", 0, true, HKEY_LOCAL_MACHINE);
-        std::wstring        err;
-        if (noContextMenuHKCU || noContextMenuHKLM)
-            err=registrator.UnregisterForCurrentUser();
-        else
-            err=registrator.RegisterForCurrentUser();
-        if (!err.empty())
-            OutputDebugString((L"bowpad: error during registration: " + err + L"\n").c_str());
-        else
-            OutputDebugString(L"bowpad: registration/unregistration completed successfully\n");
-    }
-    catch (const std::exception& ex)
-    {
-        OutputDebugStringA((std::string("bowpad: exception during registration: ") + ex.what() + "\n").c_str());
-    }
-    // Finally we notify the shell that we have made changes, so it reloads the right click menu items.
-    SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
-}
-
-void EnsureRegistrationOnCurrentUser()
-{
-    // check if the process name this dll is loaded into is explorer.exe
-    wchar_t pathBuffer[FILENAME_MAX] = {0};
-    GetModuleFileNameW(NULL, pathBuffer, FILENAME_MAX);
-    PathStripPathW(pathBuffer);
-
-    std::wstring moduleName(pathBuffer);
-    std::transform(moduleName.begin(), moduleName.end(), moduleName.begin(), std::towlower);
-    if (moduleName == L"explorer.exe")
-    {
-        // check if we're running on windows 11
-        PWSTR        pszPath = nullptr;
-        std::wstring sysPath;
-        if (SHGetKnownFolderPath(FOLDERID_System, KF_FLAG_CREATE, nullptr, &pszPath) == S_OK)
-        {
-            sysPath = pszPath;
-            CoTaskMemFree(pszPath);
-        }
-        auto             explorerVersion = CPathUtils::GetVersionFromFile(sysPath + L"\\shell32.dll");
-        std::vector<int> versions;
-        stringtok(versions, explorerVersion, true, L".");
-        bool isWin11OrLater = versions.size() > 3 && versions[2] >= 22000;
-        if (isWin11OrLater)
-        {
-            // We are being loaded into explorer.exe on windows 11
-            // start a thread to register (or unregister) the win 11 context menu entry for the current user
-            auto registrationThread = std::thread(RegisterForCurrentUserWorker);
-            registrationThread.detach();
-        }
-    }
 }
 
 class ExplorerCommandBase : public RuntimeClass<RuntimeClassFlags<ClassicCom>, IExplorerCommand, IObjectWithSite>
