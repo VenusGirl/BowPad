@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: BowPad\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 1900-01-01 00:00+0000\n"
-"PO-Revision-Date: 2024-11-04 20:23+0100\n"
+"PO-Revision-Date: 2025-09-23 20:09+0200\n"
 "Last-Translator: Stefan Küng <tortoisesvn@gmail.com>\n"
 "Language-Team: Stefan Küng <tortoisesvn@gmail.com>\n"
 "Language: de\n"
@@ -321,6 +321,14 @@ msgstr "BowPad Text Editor"
 #. Resource IDs: (260)
 msgid "BowPad lexer file"
 msgstr "BowPad Lexerdatei"
+
+#. Resource IDs: (283)
+msgid "Bowpad entry added to the Windows 11 explorer context menu"
+msgstr "Bowpad Menu zum Windows 11 Explorer Kontextmenu hinzugefügt"
+
+#. Resource IDs: (284)
+msgid "Bowpad entry removed from the Windows 11 explorer context menu"
+msgstr "Bowpad Menu vom Windows 11 Explorer Kontextmenu entfernt"
 
 #. Resource IDs: (60011, 60067, 60082)
 msgid "C"
@@ -2029,6 +2037,14 @@ msgstr "Regulärer Ausdruck ist gültig"
 msgid "Regex mode"
 msgstr "Regex Modus"
 
+#. Resource IDs: (60681, 60682)
+msgid "Register Win11 Context Menu"
+msgstr "Windows 11 Explorer Kontextmenu registrieren"
+
+#. Resource IDs: (60683)
+msgid "Registers BowPad in the Windows 11 context menu"
+msgstr "Fügt Bowpad zum Windows 11 Explorer Kontextmenu hinzu"
+
 #. Resource IDs: (60356)
 msgid "Reload"
 msgstr "Neu laden"
@@ -2676,6 +2692,14 @@ msgstr "Letzte Änderung rückgängig machen"
 msgid "Unix (LF)"
 msgstr "Unix (LF)"
 
+#. Resource IDs: (60684, 60685)
+msgid "Unregister Win11 Context Menu"
+msgstr "Windows 11 Explorer Kontextmenu de-registrieren"
+
+#. Resource IDs: (60686)
+msgid "Unregisters BowPad from the Windows 11 context menu"
+msgstr "Entfernt Bowpad vom Windows 11 Explorer Kontextmenu"
+
 #. Resource IDs: (111)
 msgid "Unsaved modifications"
 msgstr "Nicht gespeicherte Änderungen"
@@ -2898,7 +2922,7 @@ msgstr "umbrochene Zeilen einrücken"
 msgid "indents wrapped sublines"
 msgstr "rückt umbrochene Unterzeilen ein"
 
-#. Resource IDs: (60681)
+#. Resource IDs: (60687)
 msgid "no plugins loaded"
 msgstr "Keine Plugins geladen"
 
