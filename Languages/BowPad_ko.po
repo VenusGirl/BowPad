@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Bowpad\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 1900-01-01 00:00+0000\n"
-"PO-Revision-Date: 2025-09-25 17:33+0900\n"
+"PO-Revision-Date: 2025-09-25 17:39+0900\n"
 "Last-Translator: 비너스걸-VenusGirl💋 <venusgirl@outlook.com>\n"
 "Language-Team: VᴇɴᴜsGɪʀʟ <https://venusgirls.tistory.com/>\n"
 "Language: ko\n"
@@ -2619,7 +2619,7 @@ msgstr "UTF-8"
 
 #. Resource IDs: (1072)
 msgid "UTF-8 with BOM"
-msgstr "BOM 포함 UTF-8"
+msgstr "UTF-8 BOM 있음"
 
 #. Resource IDs: (60228, 60230)
 msgid "Uncomment"
