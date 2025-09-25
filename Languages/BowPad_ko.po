@@ -6,17 +6,17 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: Bowpad\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 1900-01-01 00:00+0000\n"
-"PO-Revision-Date: 2025-07-13 01:55+0900\n"
+"PO-Revision-Date: 2025-09-25 17:33+0900\n"
 "Last-Translator: 비너스걸-VenusGirl💋 <venusgirl@outlook.com>\n"
 "Language-Team: VᴇɴᴜsGɪʀʟ <https://venusgirls.tistory.com/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.7\n"
 
 # msgid/msgstr fields for Accelerator keys
 # Format is: "ID:xxxxxx:VACS+X" where:
@@ -277,11 +277,11 @@ msgstr "굵게"
 
 #. Resource IDs: (60365)
 msgid "Bookmark"
-msgstr "책갈피"
+msgstr "북마크"
 
 #. Resource IDs: (60361, 60363)
 msgid "Bookmarks"
-msgstr "책갈피"
+msgstr "북마크"
 
 #. Resource IDs: (103)
 msgid "BowPad"
@@ -294,6 +294,14 @@ msgstr "BowPad 텍스트 편집기"
 #. Resource IDs: (260)
 msgid "BowPad lexer file"
 msgstr "BowPad 렉서 파일"
+
+#. Resource IDs: (283)
+msgid "Bowpad entry added to the Windows 11 explorer context menu"
+msgstr "Windows 11 탐색기 컨텍스트 메뉴에 Bowpad 항목 추가"
+
+#. Resource IDs: (284)
+msgid "Bowpad entry removed from the Windows 11 explorer context menu"
+msgstr "Windows 11 탐색기 컨텍스트 메뉴에서 Bowpad 항목 제거"
 
 #. Resource IDs: (60011, 60067, 60082)
 msgid "C"
@@ -413,7 +421,7 @@ msgstr "새 파일의 줄 끝 선택"
 
 #. Resource IDs: (60370, 60372)
 msgid "Clear Bookmarks"
-msgstr "책갈피 지우기"
+msgstr "북마크 지우기"
 
 #. Resource IDs: (60670)
 msgid "Clear all styles"
@@ -666,7 +674,7 @@ msgid ""
 "or click here"
 msgstr ""
 "URL을 따르려면 Ctrl+클릭\n"
-"또는 여기를 클릭하십시오"
+"또는 여기를 클릭하세요"
 
 #. Resource IDs: (259)
 #, c-format
@@ -1020,7 +1028,7 @@ msgstr "원격 언어 가져오기..."
 
 #. Resource IDs: (247)
 msgid "Fetching plugins list - please wait..."
-msgstr "플러그인 목록을 가져오는 중 - 기다려 주십시오..."
+msgstr "플러그인 목록을 가져오는 중 - 기다려 주세요..."
 
 #. Resource IDs: (152, 60007)
 msgid "File"
@@ -1278,7 +1286,7 @@ msgid ""
 "The lexer file is imported. Restart BowPad to use the new lexer."
 msgstr ""
 "가져오기\n"
-"렉서 파일을 가져옵니다. 새 렉서를 사용하려면 BowPad를 다시 시작하십시오."
+"렉서 파일을 가져옵니다. 새 렉서를 사용하려면 BowPad를 다시 시작하세요."
 
 #. Resource IDs: (60635, 60636)
 msgid "Include uppercase"
@@ -1599,11 +1607,11 @@ msgstr "위로 줄 이동"
 
 #. Resource IDs: (60378)
 msgid "Move the caret to the next bookmark"
-msgstr "캐럿을 다음 책갈피로 이동"
+msgstr "캐럿을 다음 북마크로 이동"
 
 #. Resource IDs: (60383)
 msgid "Move the caret to the previous bookmark"
-msgstr "캐럿을 이전 책갈피로 이동"
+msgstr "캐럿을 이전 북마크로 이동"
 
 #. Resource IDs: (222)
 msgid ""
@@ -1685,7 +1693,7 @@ msgstr "다음"
 
 #. Resource IDs: (60377)
 msgid "Next Bookmark"
-msgstr "다음 책갈피"
+msgstr "다음 북마크"
 
 #. Resource IDs: (215)
 msgid "No corrections found!"
@@ -1934,7 +1942,7 @@ msgstr "이전"
 
 #. Resource IDs: (60382)
 msgid "Previous Bookmark"
-msgstr "이전 책갈피"
+msgstr "이전 북마크"
 
 #. Resource IDs: (60300, 60303, 60306, 60309)
 msgid "Print"
@@ -1992,6 +2000,14 @@ msgstr "정규식이 유효합니다"
 msgid "Regex mode"
 msgstr "정규식 모드"
 
+#. Resource IDs: (60681, 60682)
+msgid "Register Win11 Context Menu"
+msgstr "Win11 컨텍스트 메뉴 등록"
+
+#. Resource IDs: (60683)
+msgid "Registers BowPad in the Windows 11 context menu"
+msgstr "Windows 11 컨텍스트 메뉴에 BowPad 등록"
+
 #. Resource IDs: (60356)
 msgid "Reload"
 msgstr "다시 불러오기"
@@ -2034,7 +2050,7 @@ msgstr "빈 줄 제거"
 
 #. Resource IDs: (60373)
 msgid "Removes all bookmarks from the current file"
-msgstr "현재 파일에서 모든 책갈피를 제거합니다"
+msgstr "현재 파일에서 모든 북마크를 제거합니다"
 
 #. Resource IDs: (60341)
 msgid "Removes whitespaces at the end of lines"
@@ -2349,7 +2365,7 @@ msgstr "현재 선택 영역을 정렬합니다 일반 또는 직사각형)."
 
 #. Resource IDs: (60349, 60351)
 msgid "Spaces to Tabs"
-msgstr "탭으로 공백"
+msgstr "공백을 탭으로"
 
 #. Resource IDs: (60617)
 msgid "Spell Check"
@@ -2377,7 +2393,7 @@ msgstr "상태"
 
 #. Resource IDs: (144)
 msgid "Style Configurator"
-msgstr "스타일 구성자"
+msgstr "스타일 구성기"
 
 #. Resource IDs: (60671)
 msgid "Style selection"
@@ -2445,7 +2461,7 @@ msgstr "탭"
 
 #. Resource IDs: (60344, 60346)
 msgid "Tabs to Spaces"
-msgstr "공백으로 탭"
+msgstr "탭을 공백으로"
 
 #. Resource IDs: (60672)
 msgid "Tail -f"
@@ -2494,11 +2510,11 @@ msgstr "제목 대소문자"
 
 #. Resource IDs: (60367)
 msgid "Toggle Bookmark"
-msgstr "책갈피 전환"
+msgstr "북마크 전환"
 
 #. Resource IDs: (60368)
 msgid "Toggle a bookmark on the current line"
-msgstr "현재 줄에서 책갈피 전환"
+msgstr "현재 줄에서 북마크 전환"
 
 #. Resource IDs: (60584, 60585)
 msgid "Toggle folding all"
@@ -2603,7 +2619,7 @@ msgstr "UTF-8"
 
 #. Resource IDs: (1072)
 msgid "UTF-8 with BOM"
-msgstr "BOM있는 UTF-8"
+msgstr "BOM 포함 UTF-8"
 
 #. Resource IDs: (60228, 60230)
 msgid "Uncomment"
@@ -2628,6 +2644,14 @@ msgstr "마지막 변경 취소"
 #. Resource IDs: (1096, 60161)
 msgid "Unix (LF)"
 msgstr "Unix (LF)"
+
+#. Resource IDs: (60684, 60685)
+msgid "Unregister Win11 Context Menu"
+msgstr "Win11 컨텍스트 메뉴 등록 해제"
+
+#. Resource IDs: (60686)
+msgid "Unregisters BowPad from the Windows 11 context menu"
+msgstr "Windows 11 컨텍스트 메뉴에서 BowPad 등록 해제"
 
 #. Resource IDs: (111)
 msgid "Unsaved modifications"
@@ -2728,7 +2752,7 @@ msgstr "줄바꿈"
 
 #. Resource IDs: (143)
 msgid "Wrap around."
-msgstr "감싸기"
+msgstr "줄바꿈"
 
 #. Resource IDs: (60116)
 msgid "Wrap lines at the end of the window"
@@ -2850,7 +2874,7 @@ msgstr "줄바꿈된 줄 들여쓰기"
 msgid "indents wrapped sublines"
 msgstr "줄바꿈된 하위줄 들여쓰기"
 
-#. Resource IDs: (60681)
+#. Resource IDs: (60687)
 msgid "no plugins loaded"
 msgstr "플러그인이 로드되지 않음"
 
@@ -2956,19 +2980,19 @@ msgstr "접기 끄기"
 
 #. Resource IDs: (60666)
 msgid "with style 1"
-msgstr "스타일 1과 함께"
+msgstr "스타일 1"
 
 #. Resource IDs: (60667)
 msgid "with style 2"
-msgstr "스타일 2와 함께"
+msgstr "스타일 2"
 
 #. Resource IDs: (60668)
 msgid "with style 3"
-msgstr "스타일 3 함께"
+msgstr "스타일 3"
 
 #. Resource IDs: (60669)
 msgid "with style 4"
-msgstr "스타일 4 함께"
+msgstr "스타일 4"
 
 #. Resource IDs: (258)
 #, c-format
